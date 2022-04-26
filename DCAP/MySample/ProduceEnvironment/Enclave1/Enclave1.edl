@@ -1,0 +1,24 @@
+/*
+ * enclave 包含两个 ecall 接口, 分别为
+ * 生成 quote ：enclave_create_report
+ * 验证 quote : 
+*/
+
+
+enclave {
+    include "sgx_eid.h"
+    include "sgx_report.h"
+    trusted {
+        public uint32_t enclave_create_report([in]const sgx_target_info_t* p_qe3_target, [out]sgx_report_t* p_report);
+        public uint32_t enclave_verify_quote([in, size=32] void *measurement, [out]int *ret);
+        public uint32_t get_measurement_by_mage();
+    };
+    /* 
+     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
+     *  [in]: copy the string buffer to App outside.
+     *  [string]: specifies 'str' is a NULL terminated buffer.
+     */
+    untrusted {
+        void e1_ocall_print_string([in, string] const char *str);
+    };
+};
